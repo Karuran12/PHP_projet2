@@ -32,7 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if (isset($error)): ?>
         <p style="color: red;"><?php echo $error; ?></p>
     <?php endif; ?>
-    <input type="nom" name="nom" placeholder="Nom" required>
+    <input type="text" name="nom" placeholder="Nom" required>
     <input type="password" name="password" placeholder="Mot de passe" required>
     <button type="submit">Se connecter</button>
+    <p><a href="index.php?page=inscription">Inscrivez-vous</a></p>
 </form>

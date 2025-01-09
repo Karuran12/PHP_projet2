@@ -1,6 +1,6 @@
 <?php 
 
-$page = isset($_GET['page']) ? $_GET['page'] : 'acceuil'; 
+$page = isset($_GET['page']) ? $_GET['page'] : 'accueil'; 
 
 switch ($page) {
     case 'accueil':
@@ -18,6 +18,9 @@ switch ($page) {
         break;     
     case 'deconnexion':
         include 'view/deconnexion.php';
+        break;
+    case 'panier':
+        include 'view/panier.php';
         break;     
     default:
         include 'view/404.php';
