@@ -31,8 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manga_id']) && isset(
 }
 ?>
 
-<link rel="stylesheet" href="styles/accstyles.css">
-
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/styles.css">
+    <title>Liste des Mangas</title>
+</head>
+<body>
 <div class="container">
     <h1>Liste des Mangas</h1>
     <div class="manga">
@@ -45,10 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manga_id']) && isset(
                 <p><strong>Prix :</strong> <?= number_format($manga['prix'], 2) ?> €</p>
                 <p><strong>Stock :</strong> <?= htmlspecialchars($manga['stock']) ?></p>
                 <?php if (isset($_SESSION['user']) && $manga['stock'] > 0): ?>
-                    <form method="POST">
+                    <form method="POST" class="quantite-form">
                         <input type="hidden" name="manga_id" value="<?= $manga['id'] ?>">
-                        <label for="quantite">Quantité :</label>
-                        <input type="number" name="quantite" id="quantite" min="1" max="<?= $manga['stock'] ?>" value="1" required>
+                        <label for="quantite-<?= $manga['id'] ?>" class="quantite-label">Quantité:</label>
+                        <input type="number" name="quantite" id="quantite-<?= $manga['id'] ?>" min="1" max="<?= $manga['stock'] ?>" value="1" required>
                         <button type="submit" class="btn-acheter">Ajouter au Panier</button>
                     </form>
                 <?php endif; ?>
@@ -56,3 +63,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manga_id']) && isset(
         <?php endforeach; ?>
     </div>
 </div>
+</body>
+</html>

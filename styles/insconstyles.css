@@ -35,15 +35,15 @@ form input[type="text"]:focus,
 form input[type="email"]:focus,
 form input[type="password"]:focus,
 form textarea:focus {
-    border-color: #4CAF50; 
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); 
+    border-color: #975dd2; 
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5); 
     outline: none; 
 }
 
 form button {
     width: 100%;
     padding: 12px;
-    background-color: #4CAF50;
+    background-color: #d1a3ff;
     border: none;
     color: white;
     font-size: 18px;
@@ -54,12 +54,12 @@ form button {
 }
 
 form button:hover {
-    background-color: #45a049;
+    background-color: #975dd2;
     transform: translateY(-2px); 
 }
 
 form button:active {
-    background-color: #3e8e41;
+    background-color: #975dd2;
     transform: translateY(0); 
 }
 
@@ -71,12 +71,12 @@ form p {
 }
 
 form a {
-    color: #4CAF50;
+    color: #d1a3ff;
     text-decoration: none;
     font-weight: bold;
     transition: color 0.3s ease;
 }
 
 form a:hover {
-    color: #45a049;
+    color: #975dd2;
 }
