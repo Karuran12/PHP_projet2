@@ -1,7 +1,6 @@
 <?php
 include_once 'model/bdd.php';
 
-// Vérification de connexion de l'utilisateur
 if (!isset($_SESSION['user'])) {
     header('Location: index.php?page=connexion');
     exit;
@@ -10,37 +9,33 @@ if (!isset($_SESSION['user'])) {
 $pdo = Bdd::connexion();
 $userId = $_SESSION['user']['id'];
 
-
 if (empty($_SESSION['cart'])) {
     $query = "SELECT livre_id, quantite FROM panier WHERE user_id = ?";
     $stmt = $pdo->prepare($query);
     $stmt->execute([$userId]);
-    $cart = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $cartData = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $_SESSION['cart'] = [];
-    foreach ($cart as $item) {
-        for ($i = 0; $i < $item['quantite']; $i++) {
-            $_SESSION['cart'][] = $item['livre_id'];
-        }
+    foreach ($cartData as $item) {
+        $_SESSION['cart'][$item['livre_id']] = (int)$item['quantite'];
     }
-} else {
-    $cart = $_SESSION['cart'];
 }
+$cart = $_SESSION['cart'];
 
 $mangas = [];
 if (!empty($cart)) {
     $placeholders = str_repeat('?,', count($cart) - 1) . '?';
     $query = "SELECT * FROM livres WHERE id IN ($placeholders)";
     $stmt = $pdo->prepare($query);
-    $stmt->execute($cart);
+    $stmt->execute(array_keys($cart));
     $mangas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['valider_panier'])) {
-    $cartCount = array_count_values($cart);
-    foreach ($cartCount as $livreId => $quantite) {
-        $query = "INSERT INTO panier (user_id, livre_id, quantite) VALUES (?, ?, ?)";
+    foreach ($cart as $livreId => $quantite) {
+        $query = "INSERT INTO panier (user_id, livre_id, quantite)
+                  VALUES (?, ?, ?)
+                  ON DUPLICATE KEY UPDATE quantite = quantite + VALUES(quantite)";
         $stmt = $pdo->prepare($query);
         $stmt->execute([$userId, $livreId, $quantite]);
     }
@@ -50,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['valider_panier'])) {
 }
 ?>
 
-<link rel="stylesheet" href="view/accstyles.css">
+<link rel="stylesheet" href="styles/accstyles.css">
 
 <div class="container">
     <h1>Votre Panier</h1>
@@ -67,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['valider_panier'])) {
                     <h2><?= htmlspecialchars($manga['titre']) ?></h2>
                     <p><strong>Auteur :</strong> <?= htmlspecialchars($manga['auteur']) ?></p>
                     <p><strong>Prix :</strong> <?= number_format($manga['prix'], 2) ?> €</p>
-                    <p><strong>Catégorie :</strong> <?= htmlspecialchars($manga['categorie']) ?></p>
+                    <p><strong>Quantité :</strong> <?= is_array($cart) && isset($cart[$manga['id']]) ? (int)$cart[$manga['id']] : 0 ?></p>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -76,5 +71,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['valider_panier'])) {
         </form>
     <?php endif; ?>
 </div>
-
-

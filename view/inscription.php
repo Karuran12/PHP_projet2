@@ -29,6 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+<link rel="stylesheet" href="styles/insconstyles.css">
+
+
 <form method="POST">
     <h2>Inscription</h2>
     <input type="text" name="name" placeholder="Nom" required>

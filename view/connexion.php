@@ -27,6 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
+<link rel="stylesheet" href="styles/insconstyles.css">
+
 <form method="POST">
     <h2>Connexion</h2>
     <?php if (isset($error)): ?>

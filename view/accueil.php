@@ -12,26 +12,26 @@ try {
     die("Erreur lors de la récupération des mangas : " . $e->getMessage());
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manga_id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manga_id']) && isset($_POST['quantite'])) {
     if (!isset($_SESSION['user'])) {
         header('Location: index.php?page=connexion');
         exit;
     }
 
     $mangaId = $_POST['manga_id'];
+    $quantite = (int)$_POST['quantite'];
 
-    $query = "UPDATE livres SET stock = stock - 1 WHERE id = :id AND stock > 0";
-    $stmt = $pdo->prepare($query);
-    $stmt->execute(['id' => $mangaId]);
-
-    $_SESSION['cart'][] = $mangaId;
+    if (!isset($_SESSION['cart'][$mangaId])) {
+        $_SESSION['cart'][$mangaId] = 0;
+    }
+    $_SESSION['cart'][$mangaId] += $quantite;
 
     header('Location: index.php?page=panier');
     exit;
 }
 ?>
 
-<link rel="stylesheet" href="view/accstyles.css">
+<link rel="stylesheet" href="styles/accstyles.css">
 
 <div class="container">
     <h1>Liste des Mangas</h1>
@@ -43,12 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['manga_id'])) {
                 <p><strong>Auteur :</strong> <?= htmlspecialchars($manga['auteur']) ?></p>
                 <p><?= htmlspecialchars($manga['description']) ?></p>
                 <p><strong>Prix :</strong> <?= number_format($manga['prix'], 2) ?> €</p>
-                <p><strong>Catégorie :</strong> <?= htmlspecialchars($manga['categorie']) ?></p>
                 <p><strong>Stock :</strong> <?= htmlspecialchars($manga['stock']) ?></p>
                 <?php if (isset($_SESSION['user']) && $manga['stock'] > 0): ?>
                     <form method="POST">
                         <input type="hidden" name="manga_id" value="<?= $manga['id'] ?>">
-                        <button type="submit" class="btn-acheter">Acheter</button>
+                        <label for="quantite">Quantité :</label>
+                        <input type="number" name="quantite" id="quantite" min="1" max="<?= $manga['stock'] ?>" value="1" required>
+                        <button type="submit" class="btn-acheter">Ajouter au Panier</button>
                     </form>
                 <?php endif; ?>
             </div>
