@@ -3,11 +3,11 @@ Karuran GAJAROOBAN B2-IN
 
 -----------SQL----------------------
 -- Création de la base de données
-CREATE DATABASE IF NOT EXISTS manga;
+CREATE DATABASE manga;
 USE manga;
 
 -- Table des utilisateurs
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -51,7 +51,7 @@ VALUES
 
 
 
-CREATE TABLE IF NOT EXISTS panier (
+CREATE TABLE panier (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     livre_id INT NOT NULL,
